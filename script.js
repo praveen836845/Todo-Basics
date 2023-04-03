@@ -18,71 +18,78 @@ const input = document.getElementById('task'),
 class Task {
     // display tasks
     static display() {
+        // Get the necessary DOM elements
         const tasks_container = document.getElementById('tasks');
         const alltasks = document.getElementById('alltasks');
         const cptask=document.getElementById('cptask')
         const notask=document.getElementById('notask')
+      
+        // Initialize variables to store HTML code for tasks
         let _tasks = '';
         let _alltaks='';
         let _cptask='';
         let _notask='';
-        console.log(tasks)
+      
+        // Loop through tasks array and generate HTML for each task
         tasks.forEach((task, index) => {
-            _tasks += `                                         
-                <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
-                    <div class="">
-                        <p class="${task.completed === 'true' ? ' task-name' : 'decor'}" id="task__name">${task.name}</p>
-                    </div>
-                    <div class="action btns action_button">
-                        <button type="button" class="btn btn-sm btn-success is__completed" onclick="Task.todoCompleted('${task.id}')"><i class="fa-solid fa-circle-check"></i></button>
-                      
-                        <button type="button" class="btn btn-sm btn-danger ms-1 delete" onclick="Task.delete('${task.id}')"><i class="fa-solid fa-trash-can"></i></button>
-                    </div>
+          // Generate HTML code for a single task item
+          _tasks += `                                         
+            <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
+              <div class="">
+                <p class="${task.completed === 'true' ? ' task-name' : 'decor'}" id="task__name">${task.name}</p>
+              </div>
+              <div class="action btns action_button">
+                <button type="button" class="btn btn-sm btn-success is__completed" onclick="Task.todoCompleted('${task.id}')"><i class="fa-solid fa-circle-check"></i></button>
+                <button type="button" class="btn btn-sm btn-danger ms-1 delete" onclick="Task.delete('${task.id}')"><i class="fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+          `;
+      
+          // Generate HTML code for a single task item in "all tasks" view
+          _alltaks += `                                         
+            <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
+              <div class="">
+                <p class="c" id="decor">${task.name}</p>
+              </div>
+            </div>
+          `;
+      
+          // Generate HTML code for a single task item in "completed tasks" view
+          if(task.completed==='true'){
+            _cptask += `                                         
+              <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
+                <div class="">
+                  <p class="c" id="decor">${task.name}</p>
                 </div>
+              </div>
             `;
-            _alltaks += `                                         
-                <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
-                    <div class="">
-                        <p  class="c" id="decor">${task.name}</p>
-                    </div>
+          }
+      
+          // Generate HTML code for a single task item in "incomplete tasks" view
+          if(task.completed==='false'){
+            _notask += `                                         
+              <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
+                <div class="">
+                  <p class="c" id="decor">${task.name}</p>
                 </div>
+              </div>
             `;
-
-            if(task.completed==='false'){
-                _notask += `                                         
-                <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
-                    <div class="">
-                        <p  class="c" id="decor">${task.name}</p>
-                    </div>
-                </div>
-            `;
-            }
-
-            if(task.completed==='true'){
-                _cptask += `                                         
-                <div class="task-item ${task.state === "show" ? 'mt-2 d-flex justify-content-between align-items-center' : 'd-none'}">
-                    <div class="">
-                        <p  class="c" id="decor">${task.name}</p>
-                    </div>
-                </div>
-            `;
-            }
-
-
+          }
         });
         
-
+        // Show or hide the "Clear All" button based on whether there are any tasks to clear
         (tasks.length === 0 || _tasks === '') ? clear__all.classList.add('d-none') : clear__all.classList.remove('d-none');
+      
+        // Update the DOM with the generated HTML code for each task view
         tasks_container.innerHTML = _tasks;
         alltasks.innerHTML=_alltaks
         cptask.innerHTML=_cptask
         notask.innerHTML=_notask
+      
+        // Save the updated tasks array to local storage
         localStorage.setItem('tasks', JSON.stringify(tasks));
-
-       
-
-    }  // <button type="button" class="btn btn-sm btn-primary edit" onclick="Task.update('${task.id}')"><i class="fa-solid fa-pen-to-square"></i></button>
-
+      }
+      
 
 
     // create task
@@ -92,66 +99,95 @@ class Task {
         this.display();
     }
 
-    // completed
-    static todoCompleted(task) {
-        tasks.forEach(item => {
-            if (`${item.id}` === task) {
-                if (item.completed === 'false')
-                    item.completed = 'true';
-                else
-                    item.completed = 'false';
-            }
-        });
+    // ****************************************** completed******************************
+static todoCompleted(task) {
+    // Loop through the tasks array and find the task that matches the given `task` parameter
+    tasks.forEach(item => {
+        if (`${item.id}` === task) {
+            // If the task is currently marked as incomplete, mark it as complete; otherwise, mark it as incomplete
+            if (item.completed === 'false')
+                item.completed = 'true';
+            else
+                item.completed = 'false';
+        }
+    });
 
-        this.display();
-    }
+    // Call the `display` method to update the DOM with the new task information
+    this.display();
+}
 
-    static completeall() {
-        tasks.forEach(item => {item.completed = 'true';});
-        this.display();
-    }
-    // update/edit task
-    static update(task) {
-        const taskItems = document.querySelectorAll('.task-item');
-        const taskInput = document.getElementById('task-input');
-        const edit = document.querySelectorAll('.task-name');
+// Define a static method `completeall`
+static completeall() {
+    // Loop through the tasks array and mark all tasks as complete
+    tasks.forEach(item => {item.completed = 'true';});
 
-        tasks.forEach((item, index) => {
-            if (`${item.id}` === task) {
-                taskItems[index].classList.add('task-editing');
-                edit[index].innerHTML = `
-                    
-                    <input style='width: 100px; ' type="text" id="" class="editinput" value="${item.name}" placeholder="Edit this Todo and Hit Enter!" title="Edit this Todo and Hit Enter!" />
-                    <button type="button" class="btn btn-primary save-edited-todo">Edit This</button>
-                `;
+    // Call the `display` method to update the DOM with the new task information
+    this.display();
+}
 
-                const taskInputs = document.querySelectorAll('#task-input');
-                const saveEditTodo = document.querySelector('.save-edited-todo');
-                if (taskInputs) {
-                    taskInputs.forEach(input => {
-                        input.addEventListener('keydown', e => {
-                            if (e.key === 'Enter') {
-                                if (input.value === '') showError('.error', 'Edit Field Cannot be Empty!');
 
-                                saveEditTodo.addEventListener('click', e => {
-                                    let input_value = input.value;
-                                    if (input_value) this.update(task, input_value);
-                                });
 
-                                saveEditTodo.click();
-                            }
-                        });
+    // ***************************************** update/edit task****************************************
+    // Define a static method `update` that takes a `task` parameter
+static update(task) {
+    // Select all task items from the DOM with a class of `.task-item`
+    const taskItems = document.querySelectorAll('.task-item');
+
+    // Select the task input field and all elements with a class of `.task-name`
+    const taskInput = document.getElementById('task-input');
+    const edit = document.querySelectorAll('.task-name');
+
+    // Loop through the tasks array and find the task that matches the given `task` parameter
+    tasks.forEach((item, index) => {
+        if (`${item.id}` === task) {
+            // Add a class to the task item to indicate that it is being edited
+            taskItems[index].classList.add('task-editing');
+
+            // Replace the task name text with an input field and a "Save" button
+            edit[index].innerHTML = `
+                <input style='width: 100px; ' type="text" id="" class="editinput" value="${item.name}" placeholder="Edit this Todo and Hit Enter!" title="Edit this Todo and Hit Enter!" />
+                <button type="button" class="btn btn-primary save-edited-todo">Edit This</button>
+            `;
+
+            // Select all input fields with an ID of `task-input`
+            const taskInputs = document.querySelectorAll('#task-input');
+
+            // Select the "Save" button
+            const saveEditTodo = document.querySelector('.save-edited-todo');
+
+            // Add an event listener to each input field that checks for the "Enter" key to be pressed
+            if (taskInputs) {
+                taskInputs.forEach(input => {
+                    input.addEventListener('keydown', e => {
+                        if (e.key === 'Enter') {
+                            // Show an error message if the input field is empty
+                            if (input.value === '') showError('.error', 'Edit Field Cannot be Empty!');
+
+                            // Add an event listener to the "Save" button that updates the task with the new name
+                            saveEditTodo.addEventListener('click', e => {
+                                let input_value = input.value;
+                                if (input_value) this.update(task, input_value);
+                            });
+
+                            // Simulate a click on the "Save" button
+                            saveEditTodo.click();
+                        }
                     });
-                }
-
-                if (taskInput.value === '') return;
-
-                item.name = taskInput.value;
+                });
             }
-        });
 
-        this.display();
-    }
+            // If the task input field is empty, exit the function
+            if (taskInput.value === '') return;
+
+            // Update the task name with the value of the task input field
+            item.name = taskInput.value;
+        }
+    });
+
+    // Call the `display` method to update the DOM with the new task information
+    this.display();
+}
+
 
     // delete task
     static delete(task) {
