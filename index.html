@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+     <style>
+        body{
+            background-image: linear-gradient(to right, rgb(0, 14, 79),rgb(4, 39, 194) , rgb(20, 0, 110));
+            color: white;
+        }
+        .title-card{
+            text-align: center;
+            font-size: 4rem;
+            color: white;
+            margin: auto;
+            
+        }
+        .card-header{
+            text-align: center;
+            color: white;
+        }
+        .form-control{
+            margin: auto;
+            color: white;
+            width: 800px;
+            padding: 1rem 1.5rem;
+            margin-top: 60px;
+            border: none;
+            border-radius: 12px;
+            outline: 0px solid #5181e022;
+            color: rgb(0, 14, 79) ;
+            background-color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: .875rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px #5181e011;
+            appearance: none;
+            transition: 50ms;
+            display: block;   
+        }
+        button{
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 10%;
+            margin: auto;
+            text-align: center;
+            align-items: center;
+            border-radius: 100px;
+            padding: 0.6%;
+            margin-top: 10px;
+           background-color: white;
+           color: rgb(0, 14, 79);
+           border-style: none;
+        }
+        .buttons{
+            text-align: center;
+            align-items: center;
+        }
+        .errorblock{
+            text-align: center;
+            font-size: 2rem;
+        }
+       
+       
+        .action_button button{
+            background-color: white;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            color: rgb(0, 14, 79) ;
+            font-size: 1rem;
+        }
+        
+        .decor{
+            margin-left: 10px;
+            margin-right: 10px;
+            color: rgb(0, 14, 79) ;
+            margin-top: 10px;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            width: 400px;
+            width: 100%;
+            text-align: center;
+            border-radius: 100px;
+            background-color: white;
+            width: 800px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .task-name{
+            margin-left: 10px;
+            margin-right: 10px;
+            color: white;
+            margin-top: 10px;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            width: 400px;
+            width: 100%;
+            text-align: center;
+            border-radius: 100px;
+            background-color: rgb(0, 14, 79);
+            width: 800px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .editinput{
+            width: 800px;
+            padding: 10px; 
+            border-radius: 100px;
+        }
+     </style>
+    <div class="container">
+        <div class="">
+            <div class="">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <span class="title-card">
+                            To-do List
+                        </span>
+                        <div id="refresh" title="Refresh"><i class="fa-solid fa-arrow-rotate-right"></i></div>
+                    </div>
+                    <div class="card-body">
+                        <form action="" class="form d-flex justify-content-between">
+                            <input type="text" id="task" class="form-control" placeholder="What's on your Mind?"
+                                title="Write a Task..." />
+                            <div class="d-flex buttons">
+                                <button type="button" id="create-task" class="btn btn-primary ms-2"
+                                    title="Create">Create</button>
+                                <button type="button" id="search-task" class="btn btn-success ms-2"
+                                    title="Search">Search</button>
+                                <button type="button" id="select-all" onclick="Task.completeall()" class="btn btn-success ms-2"
+                                    title="Search">Select All</button>
+                               <button type="button" id="" onclick="Task.selecteddelete()" class="btn btn-success ms-2"
+                                    title="Search">Clear Selected</button>
+                            </div>
+                        </form>
+
+                        <div id="tasks">
+
+                        </div>
+
+                        <div id="search"></div>
+                    </div>
+                </div>
+                <div class="error errorblock"></div>
+                <button class="clear__all btn btn-danger btn-lg d-none">Clear All</button>
+            </div>
+        </div>
+        <style>
+            .showall{
+                display: flex;
+                margin: auto;
+                margin-top: 30px;
+                margin-bottom: 30px;
+                text-align: center;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .divv{
+                width: 30%;
+            }
+            .divv h1{
+                text-align: center;
+            }
+           .c{
+             margin: 20px;
+             background-color: white;
+             color: rgb(0, 14, 79) ;
+             width: 300px;
+             padding: 10px;
+             font-size: 2rem;
+             border-radius: 100px;
+           }
+        </style>
+        <div class="showall">
+            <div class="divv">
+               <h1>Compeleted Tasks</h1>
+                <div id="cptask"></div>
+            </div>
+            <div class="divv">
+                <h1>All Tasks</h1>
+                <div id="alltasks"></div>
+            </div>
+
+            <div class="divv">
+                <h1>Uncompleted Tasks</h1>
+                <div id="notask"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>
